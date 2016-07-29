@@ -1,0 +1,8 @@
+---
+
+- name: Install collectd
+  apt: name={{ item }} state=latest update_cache=yes
+  with_items:
+    - collectd
+    - collectd-utils
+  become: yes

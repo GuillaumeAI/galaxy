@@ -1,0 +1,8 @@
+---
+
+- name: Get the latest source code
+  git: repo=https://github.com/torch/distro.git dest={{ torch_dir }} update=no
+
+- name: Install dependencies
+  command: bash install-deps chdir={{ torch_dir }}
+  become: yes

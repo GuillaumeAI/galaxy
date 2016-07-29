@@ -1,0 +1,71 @@
+---
+
+- name: Install general dependencies
+  apt: name={{ item }} state=latest update_cache=yes
+  with_items:
+    - libdc1394-22
+    - libdc1394-22-dev
+    - libdc1394-utils
+    - libprotobuf-dev
+    - libleveldb-dev
+    - libsnappy-dev
+    - libopencv-dev
+    - libhdf5-serial-dev
+    - protobuf-compiler
+    - python-pip
+    - cython
+    - python-skimage
+  become: yes
+
+- name: Install libboost-all-dev without recommends
+  apt: name=libboost-all-dev state=latest update_cache=yes install_recommends=no
+  become: yes
+
+- name: Install ATLAS
+  apt: name=libatlas-base-dev state=latest update_cache=yes
+  become: yes
+
+- name: Install Python headers
+  apt: name=python-dev state=latest update_cache=yes
+  become: yes
+
+- name: Install the remaining dependencies
+  apt: name={{ item }} state=latest update_cache=yes
+  with_items:
+    - libgflags-dev
+    - libgoogle-glog-dev
+    - liblmdb-dev
+  become: yes
+
+- name: Address libdc1394 issue
+  file: src=/dev/null dest=/dev/raw1394 state=link
+  become: yes
+
+- name: Get the latest source code
+  git: repo=https://github.com/BVLC/caffe.git dest={{ caffe_dir }} update=no
+
+- name: Install pycaffe requirements
+  pip: requirements={{ caffe_dir }}/python/requirements.txt
+  become: yes
+
+- name: Include caffe python in PYTHONPATH
+  lineinfile: dest={{ ansible_env.HOME }}/.bashrc line="export PYTHONPATH=$PYTHONPATH:{{ caffe_dir }}/python"
+
+- name: Source the updated bashrc
+  command: source {{ ansible_env.HOME }}/.bashrc executable=/bin/bash
+
+- name: Create Makefile.config file
+  command: cp {{ caffe_dir }}/Makefile.config.example {{ caffe_dir }}/Makefile.config creates="{{ caffe_dir }}/Makefile.config"
+
+- name: Ensure CPU-Only compilation
+  lineinfile: dest="{{ caffe_dir }}/Makefile.config" regexp="^# CPU_ONLY := 1" line="CPU_ONLY := 1" backrefs=yes
+
+- name: Compile from source with make
+  command: make all -j4 chdir={{ caffe_dir }} creates="{{ caffe_dir }}/build/"
+  tags:
+    - compile
+
+- name: Compile pycaffe from source with make
+  command: make pycaffe -j4 chdir={{ caffe_dir }} creates="{{ caffe_dir }}/python/caffe/_caffe.so"
+  tags:
+    - compile

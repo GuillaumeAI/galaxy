@@ -1,0 +1,3 @@
+---
+
+style_transfer_dir: "{{ base_install_dir }}/style_transfer"

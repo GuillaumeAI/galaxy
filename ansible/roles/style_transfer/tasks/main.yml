@@ -1,0 +1,32 @@
+---
+
+- name: Get the latest source code
+  git: repo=https://github.com/fzliu/style-transfer.git dest={{ style_transfer_dir }} update=no
+
+- name: Install requirements
+  pip: requirements={{ style_transfer_dir }}/requirements.txt
+  become: yes
+
+- name: Download the caffenet model
+  command: bash scripts/download_models.sh caffenet chdir={{ style_transfer_dir }} creates="{{ style_transfer_dir }}/models/caffenet/bvlc_reference_caffenet.caffemodel"
+  async: 300
+  tags:
+    - models
+
+- name: Download the googlenet model
+  command: bash scripts/download_models.sh googlenet chdir={{ style_transfer_dir }} creates="{{ style_transfer_dir }}/models/googlenet/bvlc_googlenet.caffemodel"
+  async: 300
+  tags:
+    - models
+
+- name: Download the vgg16 model
+  command: bash scripts/download_models.sh vgg16 chdir={{ style_transfer_dir }} creates="{{ style_transfer_dir }}/models/vgg16/VGG_ILSVRC_16_layers.caffemodel"
+  async: 300
+  tags:
+    - models
+
+- name: Download the vgg19 model
+  command: bash scripts/download_models.sh vgg19 chdir={{ style_transfer_dir }} creates="{{ style_transfer_dir }}/models/vgg19/VGG_ILSVRC_19_layers.caffemodel"
+  async: 300
+  tags:
+    - models

@@ -1,0 +1,13 @@
+---
+
+# Default settings which apply to all hosts.
+# For easier variable management, order alphabetically.
+
+# Ansible doesn't automatically set this variable.
+ansible_ssh_port: 22
+
+# Base installation directory for all third-party software.
+base_install_dir: "/opt"
+
+# Default shell
+default_user_shell: "/bin/bash"
