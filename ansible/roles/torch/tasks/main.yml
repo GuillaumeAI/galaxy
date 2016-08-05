@@ -1,8 +1,13 @@
 ---
 
 - name: Get the latest source code
-  git: repo=https://github.com/torch/distro.git dest={{ torch_dir }} update=no
+  git: repo=https://github.com/torch/distro.git dest={{ torch_dir }} update=no accept_hostkey=yes
 
 - name: Install dependencies
   command: bash install-deps chdir={{ torch_dir }}
-  become: yes
+
+- name: Install torch
+  command: bash install.sh chdir={{ torch_dir }} creates="{{ torch_dir }}/install"
+
+- name: Source the updated bashrc
+  command: source {{ ansible_env.HOME }}/.bashrc executable=/bin/bash
