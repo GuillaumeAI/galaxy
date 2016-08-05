@@ -1,0 +1,3 @@
+---
+
+neural_style_dir: "{{ base_install_dir }}/neural_style"

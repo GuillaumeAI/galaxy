@@ -1,1 +1,17 @@
 ---
+
+- name: Get the latest source code
+  git: repo=https://github.com/jcjohnson/neural-style.git dest={{ neural_style_dir }} update=no
+
+- name: Install dependencies
+  apt: name={{ item }} state=present update_cache=yes
+  with_items:
+    - libprotobuf-dev
+    - protobuf-compiler
+  become: yes
+
+- name: Install loadcaffe dependency using luarocks
+  command: "{{ torch_dir }}/install/bin/luarocks install loadcaffe"
+
+- name: Download models
+  command: sh models/download_models.sh chdir={{ neural_style_dir }} creates="{{ neural_style_dir }}/models/VGG_ILSVRC_19_layers.caffemodel"
