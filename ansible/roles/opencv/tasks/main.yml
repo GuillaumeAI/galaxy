@@ -1,0 +1,52 @@
+---
+
+- name: Install dependencies
+  apt: name={{ item }} state=present update_cache=yes
+  with_items:
+    - build-essential
+    - cmake
+    - libgtk2.0-dev
+    - pkg-config
+    - libavcodec-dev
+    - libavformat-dev
+    - libswscale-dev
+    - python-numpy
+    - libtbb2
+    - libtbb-dev
+    - libjpeg-dev
+    - libpng-dev
+    - libtiff-dev
+    - libjasper-dev
+    - libdc1394-22-dev
+  become: yes
+
+- name: Get the source code for version 3.1.0
+  git: repo=https://github.com/opencv/opencv.git
+       dest={{ opencv_dir }}
+       version=3.1.0
+       update=no
+
+- name: Create the build destination directory
+  file: path={{ opencv_dir }}/build state=directory mode=0755
+
+- name: cmake
+  command: cmake -DCMAKE_BUILD_TYPE=RELEASE -DINSTALL_PYTHON_EXAMPLES=ON -DBUILD_EXAMPLES=ON -DWITH_QT=ON -DWITH_OPENGL=ON -DWITH_V4L=ON -DWITH_VTK=ON -DWITH_TBB=ON -DWITH_XINE=ON ..
+  args:
+    chdir: "{{ opencv_dir }}/build"
+    creates: "{{ opencv_dir }}/build/Makefile"
+
+- name: make
+  command: make -j4
+  args:
+    chdir: "{{ opencv_dir }}/build"
+
+- name: make install
+  command: make install
+  args:
+    chdir: "{{ opencv_dir }}/build"
+    creates: "{{ opencv_dir }}/build/install_manifest.txt"
+  become: yes
+
+- name: Address opencv and numpy libdc1394 issue
+  file: src=/dev/null dest=/dev/raw1394 state=link
+  become: yes
