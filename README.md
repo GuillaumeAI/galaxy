@@ -1,5 +1,5 @@
 # Galaxy
----
+
 Galaxy is a provisioning environment for various machine/deep learning software and is intended mainly for local development/experimentation. Currently, the following are available for set-up:
 
 - [Berkeley Caffe](http://caffe.berkeleyvision.org/)
@@ -8,11 +8,11 @@ Galaxy is a provisioning environment for various machine/deep learning software 
 - [Style Transfer](https://github.com/fzliu/style-transfer)
 - [Deep Visualization Toolbox](http://yosinski.com/deepvis)
 
-#### Caveats
+##### Caveats
 This tool is for Mac OSX only at the moment. While familiarity with [Ansible](https://www.ansible.com/) and [Vagrant](https://www.vagrantup.com/) are not mandatory for set-up, any experience with these provisioning tools will be helpful when attempting to edit/improve/debug the code. One final important note - currently the provisioning steps for any of the above listed software default to a CPU-only installation, as it is assumed that the set-up will be done on a personal machine. A command-line option to switch to a GPU-based installation will be added eventually for those with CUDA enabled graphics cards.
 
-#### Prerequisites
----
+## Prerequisites
+
 ##### Package Manager
 - Homebrew
 - Homebrew Cask
@@ -37,5 +37,4 @@ Install virtualbox:
 Install ansible:
 `pip install ansible`
 
-#### Getting Started
----
+## Getting Started
