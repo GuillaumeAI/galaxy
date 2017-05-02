@@ -1,0 +1,4 @@
+---
+
+- name: Compile the deconv-deep-vis-toolbox branch of caffe
+  
