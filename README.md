@@ -72,4 +72,4 @@ Voilà! Navigate to the folder where Style Transfer has been installed `/opt/sty
 
 ## License
 
-Galaxy is [MIT Licensed](../blob/master/LICENSE).
+Galaxy is [MIT Licensed](../master/LICENSE).
